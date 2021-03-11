@@ -1,4 +1,11 @@
-import java.io.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class HtmlReader {
     private MakeXml makeXml;
@@ -18,28 +25,19 @@ public class HtmlReader {
         for (int i = 0; i < fileList.length; i++) {
             try {
                 FileReader fileReader = new FileReader(fileList[i]);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                Document doc = Jsoup.parse(fileList[i], "UTF-8");
 
-                String line = "";
-                while ((line = bufferedReader.readLine()) != null) {
-                    //xml 생성
-                    //0==doc_id, 1 == title, 2 == body
-                    if (line.contains("<head>")) {
-                        this.makeXml.writeXml(0, Integer.toString(i));
-                    }
-                    if (line.contains("<title>")) {
-                        line.replace("<title>", " ");
-                        line.replace("</title>", " ");
-                        this.makeXml.writeXml(1, line);
-                    } else if (line.contains("<div id=\"content\">")) {
-                        line.replace("<p>", " ");
-                        line.replace("</p>", " ");
-                        this.makeXml.writeXml(2, line);
-                    }
+                //System.out.println(doc.title());
+
+                Elements texts = doc.getElementsByTag("p");
+                //System.out.println(texts);
+
+                makeXml.writeXml(0, Integer.toString(i));
+                makeXml.writeXml(1, doc.title());
+                if (texts.hasText()) {
+                    makeXml.writeXml(2, texts.text());
                 }
-                bufferedReader.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

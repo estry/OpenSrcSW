@@ -23,8 +23,7 @@ public class MakeXml {
 /*    private Element title;
     private Element body;*/
 
-    public MakeXml(){
-
+    public MakeXml() {
         try {
             docFactory = DocumentBuilderFactory.newInstance();
             docBuilder = docFactory.newDocumentBuilder();
@@ -36,12 +35,13 @@ public class MakeXml {
             e.printStackTrace();
         }
     }
-    public void writeXml(int type, String content){
-        switch (type){
+
+    public void writeXml(int type, String content) {
+        switch (type) {
             case 0:
                 doc_id = doc.createElement("doc");
+                doc_id.setAttribute("id", content);
                 docs.appendChild(doc_id);
-                doc_id.setAttribute("id",content);
                 break;
             case 1:
                 Element title = doc.createElement("title");
@@ -55,16 +55,18 @@ public class MakeXml {
                 break;
         }
         try {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-        DOMSource source = new DOMSource(doc);
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+            DOMSource source = new DOMSource(doc);
 
             StreamResult result = new StreamResult(new FileOutputStream(new File("./data/collection.xml")));
 
-            transformer.transform(source,result);
+            transformer.transform(source, result);
         } catch (FileNotFoundException | TransformerException e) {
             e.printStackTrace();
         }
