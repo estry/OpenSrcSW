@@ -15,7 +15,7 @@ public class HtmlReader {
 
         File[] fileList = dir.listFiles();
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < fileList.length; i++) {
             try {
                 FileReader fileReader = new FileReader(fileList[i]);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -28,13 +28,13 @@ public class HtmlReader {
                         this.makeXml.writeXml(0, Integer.toString(i));
                     }
                     if (line.contains("<title>")) {
-                        line.replace("<title>"," ");
-                        line.replace("</title>"," ");
-                        this.makeXml.writeXml(1,line);
+                        line.replace("<title>", " ");
+                        line.replace("</title>", " ");
+                        this.makeXml.writeXml(1, line);
                     } else if (line.contains("<div id=\"content\">")) {
-                        line.replace("<p>"," ");
-                        line.replace("</p>"," ");
-                        this.makeXml.writeXml(2,line);
+                        line.replace("<p>", " ");
+                        line.replace("</p>", " ");
+                        this.makeXml.writeXml(2, line);
                     }
                 }
                 bufferedReader.close();

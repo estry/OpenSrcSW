@@ -32,8 +32,6 @@ public class MakeXml {
             doc.setXmlStandalone(true);
             docs = doc.createElement("docs");
             doc.appendChild(docs);
-
-
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
