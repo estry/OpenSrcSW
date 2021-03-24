@@ -21,7 +21,8 @@ public class kuir {
     }
 
     public static void readHtml(MakeCollection makeCollection, String directory) {
-        File dir = new File("."+directory);
+
+        File dir = new File(directory);
         File[] fileList = dir.listFiles();
 
         for (int i = 0; i < fileList.length; i++) {

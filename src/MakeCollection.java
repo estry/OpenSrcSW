@@ -12,7 +12,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.List;
 
 public class MakeCollection {
     private DocumentBuilderFactory docFactory;
@@ -62,7 +61,7 @@ public class MakeCollection {
 
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult(new FileOutputStream(new File("../collection.xml")));
+            StreamResult result = new StreamResult(new FileOutputStream(new File("collection.xml")));
 
             transformer.transform(source, result);
         } catch (FileNotFoundException | TransformerException e) {

@@ -41,7 +41,7 @@ public class MakeKeyword {
 
 
     public void makeXml(String directory) {
-        File dir = new File("." + directory);
+        File dir = new File(directory);
         try {
 
             FileReader fileReader = new FileReader(dir);
@@ -59,24 +59,24 @@ public class MakeKeyword {
                     String nodeName = e.getNodeName();
                     System.out.println(nodeName);
                     if(nodeName.equals("doc")) {
-                        System.out.println("doc id = " + e.getAttribute("id"));
+                        //System.out.println("doc id = " + e.getAttribute("id"));
                         doc_id = doc.createElement("doc");
                         doc_id.setAttribute("id", e.getAttribute("id"));
                         docs.appendChild(doc_id);
                     }
-                    System.out.println("++++++++++++++++++++++");
+                    //System.out.println("++++++++++++++++++++++");
                     NodeList children = node.getChildNodes();
                     for (int j = 0; j < children.getLength(); j++) {
                         Node tmp = children.item(j);
                         if(tmp.getNodeType() == Node.ELEMENT_NODE){
                             Element e1 = (Element)tmp;
                             String name = e1.getNodeName();
-                            System.out.println(name);
+                            //System.out.println(name);
                             if(name.equals("title")){
                                 Element title = doc.createElement("title");
                                 title.appendChild(doc.createTextNode(e1.getTextContent()));
                                 doc_id.appendChild(title);
-                                System.out.println(e1.getTextContent());
+                                //System.out.println(e1.getTextContent());
                             }
                             else if(name.equals("body")){
                                 //System.out.println(e1.getTextContent());
@@ -84,11 +84,11 @@ public class MakeKeyword {
                                 Element body = doc.createElement("body");
                                 body.appendChild(doc.createTextNode(text));
                                 doc_id.appendChild(body);
-                                System.out.println(text);
+                                //System.out.println(text);
                             }
                         }
                     }
-                    System.out.println("----------------------");
+                    //System.out.println("----------------------");
                 }
             }
 
@@ -111,7 +111,7 @@ public class MakeKeyword {
 
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult(new FileOutputStream(new File("../index.xml")));
+            StreamResult result = new StreamResult(new FileOutputStream(new File("./index.xml")));
 
             transformer.transform(source, result);
         } catch (FileNotFoundException | TransformerException e) {
