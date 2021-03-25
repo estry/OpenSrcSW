@@ -8,7 +8,7 @@ import java.util.List;
 
 public class kuir {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         // write your code here
         if (args[0].equals("-c")) {
             MakeCollection makeXml = new MakeCollection();
@@ -21,7 +21,7 @@ public class kuir {
         // -i ./index.xml
         if (args[0].equals("-i")) {
             Indexer indexer = new Indexer();
-            indexer.makeIndex(args[1]);
+            indexer.xmlParser(args[1]);
         }
     }
 
