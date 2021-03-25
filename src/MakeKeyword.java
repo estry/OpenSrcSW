@@ -57,7 +57,7 @@ public class MakeKeyword {
                 if(node.getNodeType() == Node.ELEMENT_NODE) {
                     Element e = (Element)node;
                     String nodeName = e.getNodeName();
-                    System.out.println(nodeName);
+                    //System.out.println(nodeName);
                     if(nodeName.equals("doc")) {
                         //System.out.println("doc id = " + e.getAttribute("id"));
                         doc_id = doc.createElement("doc");

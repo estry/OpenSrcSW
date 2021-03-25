@@ -18,6 +18,11 @@ public class kuir {
             MakeKeyword makeKeyword = new MakeKeyword();
             makeKeyword.makeXml(args[1]);
         }
+        // -i ./index.xml
+        if (args[0].equals("-i")) {
+            Indexer indexer = new Indexer();
+            indexer.makeIndex(args[1]);
+        }
     }
 
     public static void readHtml(MakeCollection makeCollection, String directory) {
