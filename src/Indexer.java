@@ -20,10 +20,11 @@ public class Indexer {
 
     }
 
-    public void xmlParser(String filename) throws IOException, ClassNotFoundException {
+    public void xmlParser(String filename) throws IOException {
         File dir = new File(filename);
         File d = new File("./data");
         File[] fileList = d.listFiles();
+        assert fileList != null;
         len = fileList.length;
         body = new String[len];
 
@@ -81,18 +82,16 @@ public class Indexer {
                 }
             }
         }
-        //System.out.println(dic.get("밀가루"));
+
         //tf-idf calc
         for (int i = 0; i < body.length; i++) {
             String[] pa = body[i].split("#");
-            for (int j = 0; j < pa.length; j++) {
-                String[] tmp = pa[j].split(":");
+            for (String s : pa) {
+                String[] tmp = s.split(":");
                 int tf = Integer.parseInt(tmp[1]);
                 int df = dic.get(tmp[0]);
                 double w = Math.round(tf * Math.log(5.0 / (double) df) * 1000.0) / 1000.0;
-                /*if(w == 0){
-                    System.out.println(tmp[0]+" w: "+w +" tf: "+tf+" df: "+df);
-                }*/
+
                 Pair p = new Pair(i, w);
                 if (!map.containsKey(tmp[0])) {
                     ArrayList<Pair> list = new ArrayList<>();
@@ -101,12 +100,11 @@ public class Indexer {
                 } else {
                     ArrayList<Pair> list = map.get(tmp[0]);
                     list.add(p);
-                    //System.out.println(p.weight);
                     map.replace(tmp[0], list);
                 }
             }
         }
-        //System.out.println(map.get("밀가루").get(1).id);
+
         makeFile(map);
         readFile();
     }
