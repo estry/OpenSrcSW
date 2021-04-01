@@ -124,10 +124,9 @@ public class MakeKeyword {
         String line = "";
         KeywordExtractor ke = new KeywordExtractor();
         KeywordList kl = ke.extractKeyword(text, true);
-        for (int i = 0; i < kl.size(); i++) {
-            Keyword kwrd = kl.get(i);
+        for (Keyword kwrd : kl) {
             //System.out.println(kwrd.getString() + "\t" + kwrd.getCnt());
-            line = line+kwrd.getString()+":"+kwrd.getCnt() + "#";
+            line = line + kwrd.getString() + ":" + kwrd.getCnt() + "#";
         }
 
         return line;
