@@ -5,10 +5,7 @@ import org.snu.ids.kkma.index.KeywordList;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class Searcher {
     String file;
@@ -77,11 +74,11 @@ public class Searcher {
         // 문서개수만큼 배열 생성 일단 5개 하드코딩
         double[] similarity = new double[5];
         Iterator<String> iter = map.keySet().iterator();
-        for(int i =0;i<5;i++) {
+        for (int i = 0; i < 5; i++) {
             while (iter.hasNext()) {
                 String key = iter.next();
                 System.out.println(key);
-                if(!hashMap.containsKey(key))
+                if (!hashMap.containsKey(key))
                     continue;
                 else {
                     double kw = (double) map.get(key);
@@ -96,6 +93,35 @@ public class Searcher {
         //Collections.sort(similarity, Collections.reverseOrder());
         for (double d : similarity)
             System.out.println(d);
+        ArrayList<Pair> list = new ArrayList<>();
+        for (int i = 0; i < similarity.length; i++) {
+            Pair p = new Pair(i, similarity[i]);
+            list.add(p);
+        }
+
+        Comparator comp = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                Pair x = (Pair) o1;
+                Pair y = (Pair) o2;
+                if(x.weight<y.weight)
+                    return 1;
+                else if(x.weight>y.weight)
+                    return -1;
+                else
+                    return 0;
+                
+            }
+        };
+
+        Collections.sort(list,comp);
+
+        String[] docName = {"떡.html", "라면.html", "아이스크림.html", "초밥.html", "파스타.html"};
+
+        for(int i = 0;i<3;i++){
+            Pair p = list.get(i);
+            System.out.println(docName[p.id]);
+        }
 
     }
 }
