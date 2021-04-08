@@ -23,6 +23,19 @@ public class kuir {
             Indexer indexer = new Indexer();
             indexer.xmlParser(args[1]);
         }
+        // -s ./index.post -q "query"
+        if(args[0].equals("-s")){
+            //Searcher...
+            if(args[2].equals("-q")){
+                Searcher searcher = new Searcher(args[1], args[3]);
+                searcher.calcSim();
+            }
+            else {
+                System.out.println("invalid argument");
+                System.exit(-1);
+            }
+        }
+
     }
 
     public static void readHtml(MakeCollection makeCollection, String directory) {

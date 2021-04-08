@@ -5,19 +5,22 @@ import org.snu.ids.kkma.index.KeywordList;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class Searcher {
-    public void calcSim1() {
-
-    }
-
     String file;
     String query;
+    HashMap map;
+    HashMap<String, ArrayList> hashMap;
 
     public Searcher(String file, String query) {
         this.file = file;
         this.query = query;
+        map = new HashMap();
+        hashMap = new HashMap<>();
     }
 
     //query 형태소 분석
@@ -41,20 +44,8 @@ public class Searcher {
             Object object = objectInputStream.readObject();
             objectInputStream.close();
 
-            //System.out.println("읽어온 객체 type ->" + object.getClass());
-
             HashMap hashMap = (HashMap) object;
-            /*Iterator<String> it = hashMap.keySet().iterator();
-            while (it.hasNext()) {
-                String key = it.next();
-                ArrayList list = (ArrayList) hashMap.get(key);
-                System.out.print(key + " -> ");
-                for (Object p : list) {
-                    Pair pa = (Pair) p;
-                    System.out.print(pa.id + " " + pa.weight + " ");
-                }
-                System.out.println();
-            }*/
+
             ArrayList al = (ArrayList) hashMap.get(key);
             fileInputStream.close();
 
@@ -64,24 +55,94 @@ public class Searcher {
             return null;
         }
     }
-    //
 
-    public void innerProduct() {
-        HashMap<String, ArrayList> hashMap = new HashMap<>();
-        HashMap map = this.kwrdExtract(this.query);
+    public void calcSim() {
+        ArrayList innerProduct = this.innerProduct();
+        double[] sim = new double[5];
+
+        double[] sqB = this.calcSQB();
+        for(int i = 0;i<5;i++){
+            sqB[i] = Math.sqrt(sqB[i]);
+        }
+        double sqA = calcSQA();
+        for(int i = 0;i<innerProduct.size();i++) {
+            Pair p = (Pair) innerProduct.get(i);
+            sim[i] = p.weight / (sqA * sqB[i]);
+            sim[i] = Math.round(sim[i]*100.0)/100.0;
+        }
+
+        for (double d : sim)
+            System.out.println(d);
+
+        ArrayList<Pair> list = new ArrayList<>();
+        for (int i = 0; i < sim.length; i++) {
+            Pair p = new Pair(i, sim[i]);
+            list.add(p);
+        }
+
+        Comparator comp = (o1, o2) -> {
+            Pair x = (Pair) o1;
+            Pair y = (Pair) o2;
+            if (x.weight < y.weight)
+                return 1;
+            else if (x.weight > y.weight)
+                return -1;
+            else
+                return 0;
+        };
+        list.sort(comp);
+        String[] docName = {"떡.html", "라면.html", "아이스크림.html", "초밥.html", "파스타.html"};
+        for (int i = 0; i < 3; i++) {
+            Pair p = list.get(i);
+            if(p.weight != 0)
+                System.out.println(docName[p.id]);
+        }
+    }
+
+    private double[] calcSQB() {
+        Iterator<String> iter = map.keySet().iterator();
+        double[] sqB = new double[5];
+        while (iter.hasNext()) {
+            String key = iter.next();
+            if (!hashMap.containsKey(key))
+                continue;
+            else {
+                ArrayList<Pair> tmp = (ArrayList) hashMap.get(key);
+                for (Pair p : tmp) {
+                    double dw = p.weight;
+                    sqB[p.id] += Math.pow(dw, 2);
+                }
+            }
+        }
+        return sqB;
+    }
+
+    private double calcSQA() {
+        double ret = 0.0;
+        Iterator<String> iter = map.keySet().iterator();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            double kw = (double) map.get(key);
+            ret += Math.pow(kw, 2);
+        }
+        ret = Math.sqrt(ret);
+        return ret;
+    }
+
+    public ArrayList innerProduct() {
+        map = this.kwrdExtract(this.query);
         Iterator<String> it = map.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();
             ArrayList list = readFile(key);
             hashMap.put(key, list);
         }
-        // 문서개수만큼 배열 생성 일단 5개 하드코딩
+        // 문서개수만큼 배열 생성, 일단 5개 하드코딩
         double[] similarity = new double[5];
         Iterator<String> iter = map.keySet().iterator();
         for (int i = 0; i < 5; i++) {
             while (iter.hasNext()) {
                 String key = iter.next();
-                System.out.println(key);
                 if (!hashMap.containsKey(key))
                     continue;
                 else {
@@ -94,38 +155,13 @@ public class Searcher {
                 }
             }
         }
-        //Collections.sort(similarity, Collections.reverseOrder());
-        for (double d : similarity)
-            System.out.println(d);
+
         ArrayList<Pair> list = new ArrayList<>();
         for (int i = 0; i < similarity.length; i++) {
             Pair p = new Pair(i, similarity[i]);
             list.add(p);
         }
 
-        Comparator comp = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                Pair x = (Pair) o1;
-                Pair y = (Pair) o2;
-                if(x.weight<y.weight)
-                    return 1;
-                else if(x.weight>y.weight)
-                    return -1;
-                else
-                    return 0;
-
-            }
-        };
-
-        Collections.sort(list,comp);
-
-        String[] docName = {"떡.html", "라면.html", "아이스크림.html", "초밥.html", "파스타.html"};
-
-        for(int i = 0;i<3;i++){
-            Pair p = list.get(i);
-            System.out.println(docName[p.id]);
-        }
-
+        return list;
     }
 }
