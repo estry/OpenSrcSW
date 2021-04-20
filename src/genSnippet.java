@@ -27,12 +27,12 @@ public class genSnippet {
         String[] tkquery = query.split(" ");
         for (int i = 0; i < lines.size(); i++) {
             int count = 0;
-            for(int j = 0;j<tkquery.length;j++) {
+            for (int j = 0; j < tkquery.length; j++) {
                 if (lines.get(i).contains(tkquery[j])) {
                     count++;
                 }
             }
-            if(count > max){
+            if (count > max) {
                 max = count;
                 index = i;
             }
