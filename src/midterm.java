@@ -2,6 +2,7 @@
 // 컴파일 할 때
 // javac -cp ./lib/* *.java -encoding UTF-8
 // 기존 컴파일하는 방식 그대로 이용했습니다.
+// 기존 실습파일도 같이 브랜치에 푸시되어있습니다.
 import java.io.FileNotFoundException;
 
 public class midterm {
